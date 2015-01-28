@@ -4,13 +4,8 @@ require 'rubygems'
 require 'gollum/frontend/app'
 require 'omniauth'
 require 'omniauth-github'
-
-use Rack::Session::Cookie
-use OmniAuth::Builder do
-  # Need to use scope 'user' to get access to email information.
-  # TODO: This should be fixed in some way.
-  provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: 'user'
-end
+require 'omniauth-facebook'
+require 'omniauth-google-oauth2'
 
 class GitHubPullRequest
   def initialize(app)
@@ -41,10 +36,7 @@ class GitHubPullRequest
   end
 end
 
-use GitHubPullRequest
-
 class OmniAuthSetGollumAuthor
-
   def initialize(app)
     @app = app
   end
@@ -81,10 +73,19 @@ class OmniAuthSetGollumAuthor
   end
 end
 
+use Rack::Session::Cookie
+
+use OmniAuth::Builder do
+  # Need to use scope 'user' to get access to email information.
+  # TODO: This should be fixed in some way.
+  provider :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], scope: 'user'
+end
+
+use GitHubPullRequest
 use OmniAuthSetGollumAuthor
   
 gollum_path = File.expand_path(ENV['WIKI_REPO']) # CHANGE THIS TO POINT TO YOUR OWN WIKI REPO
 Precious::App.set(:gollum_path, gollum_path)
 Precious::App.set(:default_markup, :markdown) # set your favorite markup language
-Precious::App.set(:wiki_options, {:mathjax => true, :live_preview => false, :universal_toc => false, :css => true})
+Precious::App.set(:wiki_options, {:mathjax => false, :live_preview => true, :universal_toc => false, :css => true})
 run Precious::App
