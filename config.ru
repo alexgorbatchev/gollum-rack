@@ -84,17 +84,16 @@ use OmniAuthSetGollumAuthor
 gollum_path = File.expand_path(ENV['WIKI_REPO']) # CHANGE THIS TO POINT TO YOUR OWN WIKI REPO
 puts gollum_path
 
-#Gollum::Hook.register(:post_commit, :hook_id) do |committer, sha1|
-#  committer.wiki.repo.git.pull
-#  committer.wiki.repo.git.push
-#end
+Gollum::Hook.register(:post_commit, :hook_id) do |committer, sha1|
+  `cd #{gollum_path} && git push origin master`
+end
 
 Precious::App.set(:gollum_path, gollum_path)
 Precious::App.set(:server, :puma)
 Precious::App.set(:default_markup, :markdown) # set your favorite markup language
 Precious::App.set(:wiki_options, {
   :mathjax => false,
-  :live_preview => true,
+  :live_preview => false,
   :universal_toc => false,
   :allow_uploads => 'page',
   :user_icons => 'gravatar',
