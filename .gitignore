@@ -6,6 +6,7 @@ coverage
 InstalledFiles
 lib/bundler/man
 Gemfile.lock
+start.sh
 pkg
 rdoc
 spec/reports

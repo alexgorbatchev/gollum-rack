@@ -1,0 +1,9 @@
+{
+  "apps" : [
+    {
+      "name"   : "fpv.wiki",
+      "script" : "start.sh",
+      "watch"  : ["start.sh"]
+    }
+  ]
+}

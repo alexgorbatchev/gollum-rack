@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export WIKI_REPO=''
+export GITHUB_KEY=''
+export GITHUB_SECRET=''
+export FACEBOOK_KEY=''
+export FACEBOOK_SECRET=''
+export GOOGLE_CLIENT_ID=''
+export GOOGLE_CLIENT_SECRET=''
+
+puma
+
