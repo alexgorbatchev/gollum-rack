@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export COOKIE_SECRET=''
 export WIKI_REPO=''
 export GITHUB_KEY=''
 export GITHUB_SECRET=''
