@@ -88,8 +88,13 @@ end
 use GitHubPullRequest
 use OmniAuthSetGollumAuthor
 
+class Gollum::Macro::YouTube < Gollum::Macro
+  def render(*args)
+    "<a href=\"https://www.youtube.com/watch?v=#{args[0]}\"><img src=\"http://i1.ytimg.com/vi/#{args[0]}/0.jpg\"/></a>"
+  end
+end
+
 gollum_path = File.expand_path(ENV['WIKI_REPO']) # CHANGE THIS TO POINT TO YOUR OWN WIKI REPO
-puts gollum_path
 
 #Gollum::Hook.register(:post_commit, :hook_id) do |committer, sha1|
 #  `cd #{gollum_path} && git push origin master`
@@ -114,12 +119,12 @@ Precious::App.set(:wiki_options, {
   :mathjax => false,
   :live_preview => false,
   :universal_toc => false,
-  :allow_uploads => 'page',
-  :per_page_uploads => true,
+  :allow_uploads => 'dir',
+#  :per_page_uploads => true,
   :user_icons => 'gravatar',
   :css => true,
+  :js => true,
   :h1_title => true,
-  :css => true,
 })
 
 run Precious::App
