@@ -17,6 +17,7 @@ Clone `gollum-rack` from Github:
 Install required Gems:
 
     $ cd gollum-rack
+    $ sudo apt-get install libcurl3 libcurl3-gnutls libcurl4-openssl-dev
     $ bundle install
 
 Run Gollum via [Puma](http://puma.io):

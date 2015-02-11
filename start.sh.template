@@ -8,6 +8,9 @@ export FACEBOOK_KEY=''
 export FACEBOOK_SECRET=''
 export GOOGLE_CLIENT_ID=''
 export GOOGLE_CLIENT_SECRET=''
+export AMAZON_KEY=''
+export AMAZON_SECRET=''
+export AMAZON_TAG=''
 
 puma
 

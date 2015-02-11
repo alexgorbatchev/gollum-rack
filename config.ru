@@ -7,6 +7,9 @@ require 'omniauth-github'
 require 'omniauth-facebook'
 require 'omniauth-google-oauth2'
 require 'puma'
+require 'asin'
+require 'json'
+require 'httpi'
 require 'pp'
 
 class GitHubPullRequest
@@ -91,6 +94,50 @@ use OmniAuthSetGollumAuthor
 class Gollum::Macro::YouTube < Gollum::Macro
   def render(*args)
     "<a href=\"https://www.youtube.com/watch?v=#{args[0]}\"><img src=\"http://i1.ytimg.com/vi/#{args[0]}/0.jpg\"/></a>"
+  end
+end
+
+ASIN::Configuration.configure do |config|
+  config.key           = ENV['AMAZON_KEY'] or throw 'Missing AMAZON_KEY'
+  config.secret        = ENV['AMAZON_SECRET'] or throw 'Missing AMAZON_SECRET'
+  config.associate_tag = ENV['AMAZON_TAG'] or throw 'Missing AMAZON_TAG'
+  config.logger        = nil
+end
+
+HTTPI.adapter = :curb
+HTTPI.log = false
+
+class Gollum::Macro::Amazon < Gollum::Macro
+  def lookup(asin)
+    filename = ".cache/#{asin}.json"
+
+    return JSON.parse(File.read(filename)) if File.exists?(filename)
+
+    item = ASIN::Client.instance.lookup(asin)
+
+    if item
+      item = item[0].raw
+      File.write(filename, item.to_json)
+      return item
+    end
+  end
+
+  def get_html(json)
+    item = json
+
+    return %{
+      <div class="amazon-product">
+        <div><a href="#{item['DetailPageURL']}"><img src="#{item['LargeImage']['URL']}"></a></div>
+        <p>
+          <a href="#{item['DetailPageURL']}">#{item['ItemAttributes']['Title']}</a>
+          #{item['OfferSummary']['LowestNewPrice']['FormattedPrice']}
+        </p>
+      </div>
+    }
+  end
+
+  def render(*args)
+    get_html(lookup(args[0]))
   end
 end
 
